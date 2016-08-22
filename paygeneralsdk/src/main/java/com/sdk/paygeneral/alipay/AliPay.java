@@ -2,21 +2,11 @@ package com.sdk.paygeneral.alipay;
 
 import java.net.URLEncoder;
 
-import org.greenrobot.eventbus.EventBus;
 
 import com.alipay.sdk.app.PayTask;
 import com.sdk.paygeneral.IPay;
 import com.sdk.paygeneral.PayEvent;
 import com.sdk.paygeneral.R;
-import com.thinkcore.TApplication;
-import com.thinkcore.dialog.TDialogManager;
-import com.thinkcore.event.TEvent;
-import com.thinkcore.utils.TStringUtils;
-import com.thinkcore.utils.TToastUtils;
-import com.thinkcore.utils.task.TITaskListener;
-import com.thinkcore.utils.task.TTask;
-import com.thinkcore.utils.task.TTask.Task;
-import com.thinkcore.utils.task.TTask.TaskEvent;
 
 import android.app.Activity;
 import android.text.TextUtils;

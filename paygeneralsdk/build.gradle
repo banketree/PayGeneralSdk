@@ -3,6 +3,7 @@ apply plugin: 'com.android.library'
 android {
     compileSdkVersion 23
     buildToolsVersion '23.0.3'
+    useLibrary 'org.apache.http.legacy'
 
     defaultConfig {
         minSdkVersion 10
@@ -21,13 +22,12 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-
+    compile 'com.android.support:appcompat-v7:23.3.0'
     //事件分发
     compile 'de.greenrobot:eventbus:3.0.0-beta1'
 
     //工具包
     compile 'com.github.banketree:Thinkcore:1.1.1'
-
     compile files('libs/alipaySDK-20150602.jar')
     compile files('libs/libammsdk.jar')
 }
