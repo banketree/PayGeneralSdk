@@ -1,0 +1,33 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion '23.0.3'
+
+    defaultConfig {
+        minSdkVersion 10
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    testCompile 'junit:junit:4.12'
+
+    //事件分发
+    compile 'de.greenrobot:eventbus:3.0.0-beta1'
+
+    //工具包
+    compile 'com.github.banketree:Thinkcore:1.1.1'
+
+    compile files('libs/alipaySDK-20150602.jar')
+    compile files('libs/libammsdk.jar')
+}

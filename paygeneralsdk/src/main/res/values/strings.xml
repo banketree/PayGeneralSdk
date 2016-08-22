@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">PayGeneralSdk</string>
+    <string name="data_lose">数据丢失</string>
+
+</resources>
