@@ -1,10 +1,8 @@
 package com.eotu.paydemo.wxapi;
 
-import org.greenrobot.eventbus.EventBus;
 
-import com.eotu.browser.PaySdk;
-import com.eotu.browser.R;
-import com.eotu.browser.ui.BaseActivity;
+import com.eotu.paydemo.PaySdk;
+import com.eotu.paydemo.R;
 import com.sdk.paygeneral.PayEvent;
 import com.tencent.mm.sdk.modelbase.BaseReq;
 import com.tencent.mm.sdk.modelbase.BaseResp;
@@ -13,6 +11,7 @@ import com.tencent.mm.sdk.modelpay.PayReq;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.IWXAPIEventHandler;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
+import com.thinkcore.activity.TAppActivity;
 import com.thinkcore.event.TEvent;
 import com.thinkcore.utils.TReflecterUtils;
 import com.thinkcore.utils.TStringUtils;
@@ -21,7 +20,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Window;
 
-public class WXPayEntryActivity extends BaseActivity implements
+import de.greenrobot.event.EventBus;
+
+public class WXPayEntryActivity extends TAppActivity implements
 		IWXAPIEventHandler {
 	private static final String TAG = WXPayEntryActivity.class.getSimpleName();
 	private IWXAPI mWxApi;

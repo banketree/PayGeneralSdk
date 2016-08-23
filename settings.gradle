@@ -1,1 +1,1 @@
-include ':app', ':paygeneralsdk'
+include ':test',':paygeneralsdk'

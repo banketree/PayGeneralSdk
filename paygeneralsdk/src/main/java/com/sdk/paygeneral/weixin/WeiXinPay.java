@@ -13,15 +13,11 @@ import org.apache.http.message.BasicNameValuePair;
 import org.xmlpull.v1.XmlPullParser;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.util.Xml;
 
 import com.sdk.paygeneral.IPay;
-import com.sdk.paygeneral.PayGeneral;
 import com.sdk.paygeneral.R;
 import com.tencent.mm.sdk.modelpay.PayReq;
 import com.tencent.mm.sdk.openapi.IWXAPI;
@@ -29,19 +25,14 @@ import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import com.thinkcore.TApplication;
 import com.thinkcore.dialog.TDialogManager;
 import com.thinkcore.utils.TIpUtil;
-import com.thinkcore.utils.TJBsonUtils;
 import com.thinkcore.utils.TStringUtils;
 import com.thinkcore.utils.TToastUtils;
-import com.thinkcore.utils.task.TITaskListener;
-import com.thinkcore.utils.task.TTask;
-import com.thinkcore.utils.task.TTask.Task;
-import com.thinkcore.utils.task.TTask.TaskEvent;
 
 public class WeiXinPay extends WeiXinInfo implements IPay {
 	private static final String TAG = WeiXinPay.class.getSimpleName();
 	private static final String WeiXinApi = "https://api.mch.weixin.qq.com/pay/unifiedorder";
 	private IWXAPI mWXApi;
-	private TTask mPayTask;
+	private AsyncTask mPayTask;
 
 	public WeiXinPay() {
 	}
@@ -59,7 +50,7 @@ public class WeiXinPay extends WeiXinInfo implements IPay {
 			throw new Exception(TApplication.getResString(R.string.data_lose));
 		}
 
-		if (mPayTask != null && mPayTask.isTasking()) {
+		if (mPayTask != null && !mPayTask.isCancelled()) {
 			throw new Exception("正在支付");
 		}
 		mWXApi = WXAPIFactory.createWXAPI(context, null);
@@ -67,46 +58,54 @@ public class WeiXinPay extends WeiXinInfo implements IPay {
 			throw new Exception("操作失败");
 		}
 		// 生成订单
-		if (mPayTask == null)
-			mPayTask = new TTask();
-		mPayTask.stopTask();
-		mPayTask.setIXTaskListener(new TITaskListener() {
+		mPayTask = new AsyncTask() {
+			private String result,errorString;
 
 			@Override
-			public void onTask(Task task, TaskEvent event, Object... params) {
-				if (event == TaskEvent.Before) {
-					TDialogManager.showProgressDialog(context, "数据", "加载微信数据…");
-				} else if (event == TaskEvent.Cancel) {
-					TDialogManager.hideProgressDialog(context);
-					if (!TStringUtils.isEmpty(task.getError())) {
-						TToastUtils.makeText(task.getError());
+			protected Object doInBackground(Object[] params) {
+				try {
+					String url = String.format(WeiXinApi);
+					String entity = genProductArgs(goodsName, goodsDetails,
+							orderId, price, getWeiXinNotifyUrl());
+					byte[] buf = WeiXinUtil.httpPost(url, entity);
+					String content = new String(buf);
+					Map<String, String> xml = decodeXml(content);
+					String prepayID = xml.get("prepay_id");
+					if (TStringUtils.isEmpty(prepayID)) {
+						throw new Exception();
 					}
 
-					String prepayID = (String) task.getResultObject();
-					if (!TStringUtils.isEmpty(prepayID)) {
-						PayReq payReq = genPayReq(prepayID);
-						mWXApi.sendReq(payReq);
-					}
-				} else if (event == TaskEvent.Work) {
-					try {
-						String url = String.format(WeiXinApi);
-						String entity = genProductArgs(goodsName, goodsDetails,
-								orderId, price, getWeiXinNotifyUrl());
-						byte[] buf = WeiXinUtil.httpPost(url, entity);
-						String content = new String(buf);
-						Map<String, String> xml = decodeXml(content);
-						String prepayID = xml.get("prepay_id");
-						if (TStringUtils.isEmpty(prepayID)) {
-							throw new Exception();
-						}
-						task.setResultObject(prepayID);
-					} catch (Exception e) {
-						task.setError("数据异常");
-					}
+					result = prepayID;
+				} catch (Exception e) {
+					errorString = "数据异常";
+				}
+
+				return null;
+			}
+
+			@Override
+			protected void onPreExecute() {
+				super.onPreExecute();
+				TDialogManager.showProgressDialog(context, "数据", "加载数据…");
+			}
+
+			@Override
+			protected void onCancelled() {
+				super.onCancelled();
+
+				TDialogManager.hideProgressDialog(context);
+				if (!TStringUtils.isEmpty(errorString)) {
+					TToastUtils.makeText(errorString);
+				}
+
+				if (!TStringUtils.isEmpty(result)) {
+					PayReq payReq = genPayReq(result);
+					mWXApi.sendReq(payReq);
 				}
 			}
-		});
-		mPayTask.startTask("");
+		};
+
+		mPayTask.execute("");
 	}
 
 	// 统一下单
