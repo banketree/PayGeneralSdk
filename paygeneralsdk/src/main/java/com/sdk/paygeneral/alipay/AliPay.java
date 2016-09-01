@@ -11,6 +11,7 @@ import com.thinkcore.TApplication;
 import com.thinkcore.dialog.TDialogManager;
 import com.thinkcore.utils.TStringUtils;
 import com.thinkcore.utils.TToastUtils;
+import com.thinkcore.utils.task.TTask;
 
 import android.app.Activity;
 import android.os.AsyncTask;
@@ -20,7 +21,7 @@ import android.widget.Toast;
 import de.greenrobot.event.EventBus;
 
 public class AliPay extends AliPayInfo implements IPay {
-    private AsyncTask mPayTask;
+    private TTask mPayTask;
 
     @Override
     public void pay(final Activity context, String goodsName,
@@ -48,7 +49,7 @@ public class AliPay extends AliPayInfo implements IPay {
                 + getSignType();
 
         // 生成订单
-        mPayTask = new AsyncTask() {
+        mPayTask = new TTask() {
             private String result, errorString;
 
             @Override
@@ -106,7 +107,7 @@ public class AliPay extends AliPayInfo implements IPay {
             }
         };
 
-        mPayTask.execute("");
+        mPayTask.newExecute();
     }
 
     // 查询终端设备是否存在支付宝认证账户

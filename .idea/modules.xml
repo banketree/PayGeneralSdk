@@ -3,8 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/PayGeneralSdk.iml" filepath="$PROJECT_DIR$/PayGeneralSdk.iml" />
-      <module fileurl="file://$PROJECT_DIR$/paygeneralsdk/paygeneralsdk.iml" filepath="$PROJECT_DIR$/paygeneralsdk/paygeneralsdk.iml" />
       <module fileurl="file://$PROJECT_DIR$/test/app.iml" filepath="$PROJECT_DIR$/test/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/paygeneralsdk/paygeneralsdk.iml" filepath="$PROJECT_DIR$/paygeneralsdk/paygeneralsdk.iml" />
+      <module fileurl="file://$PROJECT_DIR$/test/test.iml" filepath="$PROJECT_DIR$/test/test.iml" />
     </modules>
   </component>
 </project>

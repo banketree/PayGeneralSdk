@@ -29,7 +29,7 @@ dependencies {
     compile 'de.greenrobot:eventbus:3.0.0-beta1'
 
     //工具包
-    compile 'com.github.banketree:Thinkcore:1.1.1'
+    compile 'com.github.banketree:Thinkcore:1.2.0'
     compile files('libs/alipaySDK-20150602.jar')
     compile files('libs/libammsdk.jar')
 }

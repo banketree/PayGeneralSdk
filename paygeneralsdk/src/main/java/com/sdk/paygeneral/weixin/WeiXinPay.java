@@ -27,12 +27,13 @@ import com.thinkcore.dialog.TDialogManager;
 import com.thinkcore.utils.TIpUtil;
 import com.thinkcore.utils.TStringUtils;
 import com.thinkcore.utils.TToastUtils;
+import com.thinkcore.utils.task.TTask;
 
 public class WeiXinPay extends WeiXinInfo implements IPay {
 	private static final String TAG = WeiXinPay.class.getSimpleName();
 	private static final String WeiXinApi = "https://api.mch.weixin.qq.com/pay/unifiedorder";
 	private IWXAPI mWXApi;
-	private AsyncTask mPayTask;
+	private TTask mPayTask;
 
 	public WeiXinPay() {
 	}
@@ -58,7 +59,7 @@ public class WeiXinPay extends WeiXinInfo implements IPay {
 			throw new Exception("操作失败");
 		}
 		// 生成订单
-		mPayTask = new AsyncTask() {
+		mPayTask = new TTask() {
 			private String result,errorString;
 
 			@Override
@@ -105,7 +106,7 @@ public class WeiXinPay extends WeiXinInfo implements IPay {
 			}
 		};
 
-		mPayTask.execute("");
+		mPayTask.newExecute();
 	}
 
 	// 统一下单
